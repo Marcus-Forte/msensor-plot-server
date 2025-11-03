@@ -45,9 +45,19 @@ class PlotServiceStub(object):
                 request_serializer=proto__gen_dot_plot__pb2.RemoveAxisRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.AddSignal = channel.unary_unary(
+                '/PlotService/AddSignal',
+                request_serializer=proto__gen_dot_plot__pb2.AddSignalRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
+        self.RemoveSignal = channel.unary_unary(
+                '/PlotService/RemoveSignal',
+                request_serializer=proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
         self.streamPlot = channel.stream_unary(
                 '/PlotService/streamPlot',
-                request_serializer=proto__gen_dot_plot__pb2.streamPoint.SerializeToString,
+                request_serializer=proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
 
@@ -56,7 +66,8 @@ class PlotServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def AddAxis(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """Configure
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -67,8 +78,21 @@ class PlotServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def streamPlot(self, request_iterator, context):
+    def AddSignal(self, request, context):
         """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def RemoveSignal(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def streamPlot(self, request_iterator, context):
+        """Stream
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -86,9 +110,19 @@ def add_PlotServiceServicer_to_server(servicer, server):
                     request_deserializer=proto__gen_dot_plot__pb2.RemoveAxisRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'AddSignal': grpc.unary_unary_rpc_method_handler(
+                    servicer.AddSignal,
+                    request_deserializer=proto__gen_dot_plot__pb2.AddSignalRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'RemoveSignal': grpc.unary_unary_rpc_method_handler(
+                    servicer.RemoveSignal,
+                    request_deserializer=proto__gen_dot_plot__pb2.RemoveSignalRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
             'streamPlot': grpc.stream_unary_rpc_method_handler(
                     servicer.streamPlot,
-                    request_deserializer=proto__gen_dot_plot__pb2.streamPoint.FromString,
+                    request_deserializer=proto__gen_dot_plot__pb2.streamPointRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -157,6 +191,60 @@ class PlotService(object):
             _registered_method=True)
 
     @staticmethod
+    def AddSignal(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/PlotService/AddSignal',
+            proto__gen_dot_plot__pb2.AddSignalRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def RemoveSignal(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/PlotService/RemoveSignal',
+            proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
     def streamPlot(request_iterator,
             target,
             options=(),
@@ -171,7 +259,7 @@ class PlotService(object):
             request_iterator,
             target,
             '/PlotService/streamPlot',
-            proto__gen_dot_plot__pb2.streamPoint.SerializeToString,
+            proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

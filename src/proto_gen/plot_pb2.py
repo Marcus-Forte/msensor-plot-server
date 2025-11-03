@@ -25,7 +25,7 @@ _sym_db = _symbol_database.Default()
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14proto_gen/plot.proto\x1a\x1bgoogle/protobuf/empty.proto\"|\n\x0e\x41\x64\x64\x41xisRequest\x12\x0f\n\x07\x61xis_id\x18\x01 \x01(\r\x12\x19\n\x11number_of_samples\x18\x02 \x01(\r\x12\x12\n\nplot_title\x18\x03 \x01(\t\x12\x14\n\x0cx_axis_title\x18\x04 \x01(\t\x12\x14\n\x0cy_axis_title\x18\x05 \x01(\t\"$\n\x11RemoveAxisRequest\x12\x0f\n\x07\x61xis_id\x18\x01 \x01(\r\"-\n\x0bstreamPoint\x12\x0f\n\x07\x61xis_id\x18\x01 \x01(\r\x12\r\n\x05value\x18\x02 \x01(\x02\x32\xb1\x01\n\x0bPlotService\x12\x32\n\x07\x41\x64\x64\x41xis\x12\x0f.AddAxisRequest\x1a\x16.google.protobuf.Empty\x12\x38\n\nRemoveAxis\x12\x12.RemoveAxisRequest\x1a\x16.google.protobuf.Empty\x12\x34\n\nstreamPlot\x12\x0c.streamPoint\x1a\x16.google.protobuf.Empty(\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x14proto_gen/plot.proto\x1a\x1bgoogle/protobuf/empty.proto\"|\n\x0e\x41\x64\x64\x41xisRequest\x12\x0f\n\x07\x61xis_id\x18\x01 \x01(\r\x12\x19\n\x11number_of_samples\x18\x02 \x01(\r\x12\x12\n\nplot_title\x18\x03 \x01(\t\x12\x14\n\x0cx_axis_title\x18\x04 \x01(\t\x12\x14\n\x0cy_axis_title\x18\x05 \x01(\t\"$\n\x11RemoveAxisRequest\x12\x0f\n\x07\x61xis_id\x18\x01 \x01(\r\"w\n\x10\x41\x64\x64SignalRequest\x12\x0f\n\x07\x61xis_id\x18\x01 \x01(\r\x12\x11\n\tsignal_id\x18\x02 \x01(\r\x12\x13\n\x0bsignal_name\x18\x03 \x01(\t\x12\x19\n\x0csignal_color\x18\x04 \x01(\tH\x00\x88\x01\x01\x42\x0f\n\r_signal_color\"(\n\x13RemoveSignalRequest\x12\x11\n\tsignal_id\x18\x01 \x01(\r\"/\n\x0bstreamPoint\x12\x11\n\tsignal_id\x18\x01 \x01(\r\x12\r\n\x05value\x18\x03 \x01(\x02\"2\n\x12streamPointRequest\x12\x1c\n\x06points\x18\x01 \x03(\x0b\x32\x0c.streamPoint2\xae\x02\n\x0bPlotService\x12\x32\n\x07\x41\x64\x64\x41xis\x12\x0f.AddAxisRequest\x1a\x16.google.protobuf.Empty\x12\x38\n\nRemoveAxis\x12\x12.RemoveAxisRequest\x1a\x16.google.protobuf.Empty\x12\x36\n\tAddSignal\x12\x11.AddSignalRequest\x1a\x16.google.protobuf.Empty\x12<\n\x0cRemoveSignal\x12\x14.RemoveSignalRequest\x1a\x16.google.protobuf.Empty\x12;\n\nstreamPlot\x12\x13.streamPointRequest\x1a\x16.google.protobuf.Empty(\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -36,8 +36,14 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_ADDAXISREQUEST']._serialized_end=177
   _globals['_REMOVEAXISREQUEST']._serialized_start=179
   _globals['_REMOVEAXISREQUEST']._serialized_end=215
-  _globals['_STREAMPOINT']._serialized_start=217
-  _globals['_STREAMPOINT']._serialized_end=262
-  _globals['_PLOTSERVICE']._serialized_start=265
-  _globals['_PLOTSERVICE']._serialized_end=442
+  _globals['_ADDSIGNALREQUEST']._serialized_start=217
+  _globals['_ADDSIGNALREQUEST']._serialized_end=336
+  _globals['_REMOVESIGNALREQUEST']._serialized_start=338
+  _globals['_REMOVESIGNALREQUEST']._serialized_end=378
+  _globals['_STREAMPOINT']._serialized_start=380
+  _globals['_STREAMPOINT']._serialized_end=427
+  _globals['_STREAMPOINTREQUEST']._serialized_start=429
+  _globals['_STREAMPOINTREQUEST']._serialized_end=479
+  _globals['_PLOTSERVICE']._serialized_start=482
+  _globals['_PLOTSERVICE']._serialized_end=784
 # @@protoc_insertion_point(module_scope)

@@ -14,14 +14,35 @@ message RemoveAxisRequest {
     uint32 axis_id = 1;
 }
 
+message AddSignalRequest {
+  uint32 axis_id = 1; // axis to attach the signal to
+  uint32 signal_id = 2;
+  string signal_name = 3;
+  optional string signal_color = 4; // if not specified, pick at random by the server
+}
+
+message RemoveSignalRequest {
+  uint32 signal_id = 1;
+}
+
 message streamPoint {
-  uint32 axis_id = 1;
-  float value = 2;
+  uint32 signal_id = 1;
+  float value = 3;
+}
+
+message streamPointRequest {
+  repeated streamPoint points = 1;
 }
 
 service PlotService {
+  // Configure
   rpc AddAxis(AddAxisRequest) returns (google.protobuf.Empty);
   rpc RemoveAxis(RemoveAxisRequest) returns (google.protobuf.Empty);
 
-  rpc streamPlot (stream streamPoint) returns (google.protobuf.Empty);
+  rpc AddSignal(AddSignalRequest) returns (google.protobuf.Empty);
+  rpc RemoveSignal(RemoveSignalRequest) returns (google.protobuf.Empty);
+ 
+
+  // Stream
+  rpc streamPlot (stream streamPointRequest) returns (google.protobuf.Empty);
 }

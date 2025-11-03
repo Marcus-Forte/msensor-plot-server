@@ -1,6 +1,7 @@
 import sys
 import grpc
 import threading
+import argparse  # (NEW) Import argparse
 from concurrent import futures
 
 from PyQt5 import QtWidgets
@@ -19,6 +20,18 @@ pg.setConfigOption('foreground', 'w')
 
 # --- Main execution ---
 def main():
+    # (NEW) Setup argparse
+    parser = argparse.ArgumentParser(description="gRPC Remote Plotter Server")
+    parser.add_argument(
+        '-p', '--port',
+        type=int,
+        required=True,
+        default=50051,
+        help='The gRPC port to listen on (default: 50051)'
+    )
+    args = parser.parse_args()
+    port = args.port
+    
     # 1. Create the Qt Application
     app = QtWidgets.QApplication(sys.argv)
     
@@ -34,7 +47,8 @@ def main():
     # 5. Create the gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     plot_pb2_grpc.add_PlotServiceServicer_to_server(servicer, server)
-    port = 50051
+    
+    # (MODIFIED) Use the port from argparse
     server.add_insecure_port(f'[::]:{port}')
     
     # 6. Start the gRPC server in a separate thread.
@@ -42,6 +56,7 @@ def main():
     server_thread = threading.Thread(target=server.start, daemon=True)
     server_thread.start()
     
+    # (MODIFIED) Print the port being used
     print(f"--- gRPC Plot Server running in background on port {port} ---")
     
     # 7. Show the Qt window
