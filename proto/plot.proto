@@ -1,0 +1,27 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+message AddAxisRequest {
+    uint32 axis_id = 1;
+    uint32 number_of_samples = 2;
+
+    string plot_title = 3;
+    string x_axis_title = 4;
+    string y_axis_title = 5;
+}
+
+message RemoveAxisRequest {
+    uint32 axis_id = 1;
+}
+
+message streamPoint {
+  uint32 axis_id = 1;
+  float value = 2;
+}
+
+service PlotService {
+  rpc AddAxis(AddAxisRequest) returns (google.protobuf.Empty);
+  rpc RemoveAxis(RemoveAxisRequest) returns (google.protobuf.Empty);
+
+  rpc streamPlot (stream streamPoint) returns (google.protobuf.Empty);
+}
