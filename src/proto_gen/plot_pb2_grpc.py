@@ -27,7 +27,9 @@ if _version_not_supported:
 
 
 class PlotServiceStub(object):
-    """Missing associated documentation comment in .proto file."""
+    """
+
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -55,6 +57,11 @@ class PlotServiceStub(object):
                 request_serializer=src_dot_proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
+        self.clearAll = channel.unary_unary(
+                '/PlotService/clearAll',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                _registered_method=True)
         self.streamPlot = channel.stream_unary(
                 '/PlotService/streamPlot',
                 request_serializer=src_dot_proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
@@ -63,7 +70,9 @@ class PlotServiceStub(object):
 
 
 class PlotServiceServicer(object):
-    """Missing associated documentation comment in .proto file."""
+    """
+
+    """
 
     def AddAxis(self, request, context):
         """Configure
@@ -85,6 +94,12 @@ class PlotServiceServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def RemoveSignal(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def clearAll(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -120,6 +135,11 @@ def add_PlotServiceServicer_to_server(servicer, server):
                     request_deserializer=src_dot_proto__gen_dot_plot__pb2.RemoveSignalRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
+            'clearAll': grpc.unary_unary_rpc_method_handler(
+                    servicer.clearAll,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
             'streamPlot': grpc.stream_unary_rpc_method_handler(
                     servicer.streamPlot,
                     request_deserializer=src_dot_proto__gen_dot_plot__pb2.streamPointRequest.FromString,
@@ -134,7 +154,9 @@ def add_PlotServiceServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class PlotService(object):
-    """Missing associated documentation comment in .proto file."""
+    """
+
+    """
 
     @staticmethod
     def AddAxis(request,
@@ -233,6 +255,33 @@ class PlotService(object):
             target,
             '/PlotService/RemoveSignal',
             src_dot_proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def clearAll(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/PlotService/clearAll',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

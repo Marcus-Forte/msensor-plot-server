@@ -1,16 +1,14 @@
 import grpc
 import sys
 import argparse
-
 # gRPC stubs for your PLOT server
 from src.proto_gen import plot_pb2_grpc, plot_pb2
-
-# --- Configuration ---
+from google.protobuf import empty_pb2
 
 # --- Plot Configuration ---
 AXIS_ID_ACCEL = 1
 AXIS_ID_GYRO = 2
-SAMPLES_TO_SHOW = 300 # Number of points on the plot
+SAMPLES_TO_SHOW = 1000 # Number of points on the plot
 
 SIGNAL_ID_ACC_X = 10
 SIGNAL_ID_ACC_Y = 11
@@ -21,25 +19,29 @@ SIGNAL_ID_GYRO_Z = 22
 
 def main():
 
-    argparser = argparse.ArgumentParser(description="Configure IMU Plots on gRPC Plot Server")
-
-    argparser.add_argument(
+    args = argparse.ArgumentParser(description="IMU Plot Configuration Client")
+    args.add_argument(
         '-a', '--address',
         type=str,
         required=True,
-        default='localhost:50051',
         help='Address of the gRPC plot server (default: localhost:50051)'
     )
 
-    args = argparser.parse_args()
-    print(f"Connecting to plot server at {args.address} to configure IMU plots...")
+    parsed_args = args.parse_args()
+    print(f"Connecting to plot server at {parsed_args.address} to configure IMU plots...")
     
     try:
-        with grpc.insecure_channel(args.address) as channel:
+        with grpc.insecure_channel(parsed_args.address) as channel:
             stub = plot_pb2_grpc.PlotServiceStub(channel)
             
             # 1. Wait for plot server to be ready
             print(f"Connected. Sending configuration...")
+            
+            # Clear all existing plots first ---
+            print("  > Sending clearAll request...")
+            stub.clearAll(empty_pb2.Empty())
+            print("  > Server cleared.")
+
 
             # --- Add Axis 1 (Accelerometer) ---
             stub.AddAxis(plot_pb2.AddAxisRequest(
@@ -47,7 +49,7 @@ def main():
                 number_of_samples=SAMPLES_TO_SHOW,
                 plot_title="Accelerometer",
                 x_axis_title="Time (samples)",
-                y_axis_title="Acceleration (m/s^2)"
+                y_axis_title="Acceleration (g)"
             ))
             print(f"  > Added Axis {AXIS_ID_ACCEL} (Accelerometer)")
             
@@ -94,11 +96,11 @@ def main():
             print("\nConfiguration complete. Plots are ready.")
 
     except grpc.FutureTimeoutError:
-        print(f"!!! ERROR: Connection timed out. Is the plot server running at {args.address}? !!!")
+        print(f"!!! ERROR: Connection timed out. Is the plot server running at {parsed_args.address}? !!!")
         sys.exit(1)
     except grpc.RpcError as e:
         if e.code() == grpc.StatusCode.UNAVAILABLE:
-             print(f"!!! ERROR: Plot server is unavailable at {args.address}. Is it running? !!!")
+             print(f"!!! ERROR: Plot server is unavailable at {parsed_args.address}. Is it running? !!!")
         else:
              print(f"!!! gRPC ERROR: {e.details()} ({e.code()}) !!!")
         sys.exit(1)
@@ -108,3 +110,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

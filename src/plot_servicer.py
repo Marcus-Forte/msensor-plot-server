@@ -3,7 +3,7 @@ from PyQt5 import QtCore
 import pyqtgraph as pg
 
 # Import the generated gRPC files
-from src.proto_gen import plot_pb2_grpc
+from src.proto_gen import  plot_pb2_grpc
 from google.protobuf import empty_pb2
 
 # --- 1. The gRPC Servicer ---
@@ -17,12 +17,13 @@ class PlotServicer(plot_pb2_grpc.PlotServiceServicer, QtCore.QObject):
     
     add_axis_signal = QtCore.pyqtSignal(object)
     remove_axis_signal = QtCore.pyqtSignal(object)
-    
-    # This signal will now emit a BATCH object
-    add_point_signal = QtCore.pyqtSignal(object) 
+    add_point_signal = QtCore.pyqtSignal(object) # Carries the batch
     
     add_signal_signal = QtCore.pyqtSignal(object)
     remove_signal_signal = QtCore.pyqtSignal(object)
+    
+    # Signal to clear all plots
+    clear_all_signal = QtCore.pyqtSignal()
     
 
     def __init__(self):
@@ -32,14 +33,10 @@ class PlotServicer(plot_pb2_grpc.PlotServiceServicer, QtCore.QObject):
         
         # Simple color rotation for new plots
         self.pens = [pg.mkPen('r'), pg.mkPen('g'), pg.mkPen('b'), 
-                     pg.mkPen('c'), pg.mkPen('m'), pg.mkPen('y'),
-                     pg.mkPen(color=(255, 165, 0)), # Orange
-                     pg.mkPen(color=(238, 130, 238)), # Violet
-                    ]
+                     pg.mkPen('c'), pg.mkPen('m'), pg.mkPen('y')]
         self.pen_index = 0
 
     def get_next_pen(self):
-        """Used for random color assignment"""
         pen = self.pens[self.pen_index]
         self.pen_index = (self.pen_index + 1) % len(self.pens)
         return pen
@@ -49,7 +46,7 @@ class PlotServicer(plot_pb2_grpc.PlotServiceServicer, QtCore.QObject):
     def AddAxis(self, request, context):
         """
         Called by a gRPC client to add a new plot.
-        (Unchanged)
+        This runs in a gRPC thread.
         """
         print(f"[gRPC] Received AddAxis request for ID: {request.axis_id}")
         self.add_axis_signal.emit(request)
@@ -58,7 +55,7 @@ class PlotServicer(plot_pb2_grpc.PlotServiceServicer, QtCore.QObject):
     def RemoveAxis(self, request, context):
         """
         Called by a gRPC client to remove a plot.
-        (Unchanged)
+        This runs in a gRPC thread.
         """
         print(f"[gRPC] Received RemoveAxis request for ID: {request.axis_id}")
         self.remove_axis_signal.emit(request)
@@ -66,34 +63,45 @@ class PlotServicer(plot_pb2_grpc.PlotServiceServicer, QtCore.QObject):
 
     def AddSignal(self, request, context):
         """
-        Called by a gRPC client to add a new line (signal) to a plot.
-        (Unchanged)
+        (NEW) Called by a gRPC client to add a line to a plot.
+        This runs in a gRPC thread.
         """
-        print(f"[gRPC] Received AddSignal request for signal ID: {request.signal_id} on axis ID: {request.axis_id}")
+        print(f"[gRPC] Received AddSignal request for ID: {request.signal_id} on Axis {request.axis_id}")
         self.add_signal_signal.emit(request)
         return empty_pb2.Empty()
 
     def RemoveSignal(self, request, context):
         """
-        Called by a gRPC client to remove a line (signal).
-        (Unchanged)
+        (NEW) Called by a gRPC client to remove a line from a plot.
+        This runs in a gRPC thread.
         """
-        print(f"[gRPC] Received RemoveSignal request for signal ID: {request.signal_id}")
+        print(f"[gRPC] Received RemoveSignal request for ID: {request.signal_id}")
         self.remove_signal_signal.emit(request)
+        return empty_pb2.Empty()
+
+    # (NEW) gRPC Method for clearAll
+    def clearAll(self, request, context):
+        """
+        (NEW) Called by a gRPC client to remove ALL plots and signals.
+        This runs in a gRPC thread.
+        """
+        print(f"[gRPC] Received clearAll request.")
+        self.clear_all_signal.emit()
         return empty_pb2.Empty()
 
 
     def streamPlot(self, request_iterator, context):
         """
         Called by a gRPC client to stream data points.
-        This now iterates over BATCH messages.
+        (MODIFIED to expect batches)
+        This runs in a gRPC thread.
         """
-        print("[gRPC] Client connected for streaming point batches...")
+        print("[gRPC] Client connected for streaming points...")
         try:
-            # Iterate over batches, not individual points
-            # Assumes the client sends a message containing a 'points' field
-            for batch in request_iterator: 
-                # Emit the signal with the whole batch
+            # request_iterator is a blocking generator.
+            # The loop will run as long as the client is streaming.
+            for batch in request_iterator:
+                # Emit the signal for each batch received
                 self.add_point_signal.emit(batch)
                 
             print("[gRPC] Client finished streaming.")

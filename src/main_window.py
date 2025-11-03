@@ -17,7 +17,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.plots = {}
         
-        #Fast lookup map to find which axis a signal belongs to
+        # Fast lookup map to find which axis a signal belongs to
         self.signal_to_axis_map = {}
         
         # We'll get this from the servicer
@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Connects the servicer's signals to this window's slots.
         """
         self.servicer = servicer
-        # Connect all services
+        # Connect all signals
         self.servicer.add_axis_signal.connect(self.on_add_axis)
         self.servicer.remove_axis_signal.connect(self.on_remove_axis)
         
@@ -37,6 +37,9 @@ class MainWindow(QtWidgets.QMainWindow):
         
         self.servicer.add_signal_signal.connect(self.on_add_signal)
         self.servicer.remove_signal_signal.connect(self.on_remove_signal)
+
+        # Connect the clear all signal
+        self.servicer.clear_all_signal.connect(self.on_clear_all)
 
 
     # --- Qt Slot ---
@@ -57,12 +60,22 @@ class MainWindow(QtWidgets.QMainWindow):
         plot_item = self.layoutWidget.addPlot(row=len(self.plots), col=0)
         
         # Configure the plot
-        plot_item.setTitle(request.plot_title, color='k', size="12pt")
-        plot_item.setLabel('left', request.y_axis_title)
-        plot_item.setLabel('bottom', request.x_axis_title)
+        # Increased title font size
+        plot_item.setTitle(request.plot_title, color='w', size="16pt") 
+        
+        # Set font size for axis labels
+        label_style = {'color': 'w', 'font-size': '12pt'}
+        plot_item.getAxis('left').setLabel(text=request.y_axis_title, **label_style)
+        plot_item.getAxis('bottom').setLabel(text=request.x_axis_title, **label_style)
+        
+        # Make sure axis text is visible
+        plot_item.getAxis('left').setTextPen('w')
+        plot_item.getAxis('bottom').setTextPen('w')
+        
         plot_item.showGrid(x=True, y=True, alpha=0.3)
-        # Added labelStyle to make the legend font larger
-        plot_item.addLegend(brush=pg.mkBrush(50, 50, 50, 150), labelStyle={'color': 'k', 'font-size': '10pt'})
+        
+        # Increased legend font size for signal names
+        plot_item.addLegend(brush=pg.mkBrush(50, 50, 50, 150), labelStyle={'color': 'w', 'font-size': '10pt'})
 
         # Store the plot info for later
         self.plots[axis_id] = {
@@ -85,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if plot_info:
             print(f"[GUI] Removing axis: {axis_id}")
             
-            # Must also remove all signals from the lookup map
+            # (NEW) Must also remove all signals from the lookup map
             for signal_id in plot_info['signals'].keys():
                 self.signal_to_axis_map.pop(signal_id, None)
                 
@@ -96,7 +109,7 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             print(f"[GUI] Warning: Tried to remove non-existent axis {axis_id}")
 
-    # --- Qt Slot ---
+    # --- (NEW) Qt Slot ---
     @QtCore.pyqtSlot(object)
     def on_add_signal(self, request):
         """
@@ -120,10 +133,11 @@ class MainWindow(QtWidgets.QMainWindow):
              print(f"[GUI] Warning: Signal {signal_id} already in plot, but not in map. (State error)")
              # Continue anyway, overwrite
         
-        # Updated print statement
+        # (MODIFIED) Updated print statement
         print(f"[GUI] Adding signal {signal_id} ({request.signal_name}) to axis {axis_id}")
 
-        # Get the pen, check for optional field 'signal_color'
+        # Get the pen
+        # (MODIFIED) Correctly check for optional field 'signal_color'
         if request.HasField("signal_color") and request.signal_color:
             try:
                 pen = pg.mkPen(request.signal_color)
@@ -137,7 +151,7 @@ class MainWindow(QtWidgets.QMainWindow):
         buffer_size = plot_info['number_of_samples']
         data_buffer = np.zeros(buffer_size)
         
-        # Use the provided signal_name for the legend
+        # (MODIFIED) Use the provided signal_name for the legend
         signal_name = request.signal_name if request.signal_name else f"Signal {signal_id}"
 
         # Add the line to the plot
@@ -153,7 +167,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.signal_to_axis_map[signal_id] = axis_id
         
 
-    # --- Qt Slot ---
+    # --- (NEW) Qt Slot ---
     @QtCore.pyqtSlot(object)
     def on_remove_signal(self, request):
         """
@@ -181,7 +195,26 @@ It removes a single line (signal) from a plot.
             print(f"[GUI] Warning: Signal {signal_id} was in map but not in plot signals dict.")
 
 
-    # --- Qt Slot ---
+    # --- (NEW) Qt Slot ---
+    @QtCore.pyqtSlot()
+    def on_clear_all(self):
+        """
+        This function runs in the MAIN GUI THREAD.
+        It removes all plots and resets the internal state.
+        """
+        print("[GUI] Clearing all plots...")
+        
+        # Iterate over a copy of the values() since we're modifying the dict
+        for plot_info in list(self.plots.values()):
+            plot_info['plot'].clear()
+            self.layoutWidget.removeItem(plot_info['plot'])
+            
+        # Reset internal state
+        self.plots = {}
+        self.signal_to_axis_map = {}
+
+
+    # --- (MODIFIED) Qt Slot ---
     @QtCore.pyqtSlot(object)
     def on_add_point_batch(self, batch): # Renamed from on_add_point
         """
@@ -239,5 +272,4 @@ Signals that are not in the batch will be scrolled with a '0'.
             
             # Update the plot line
             signal_info['line'].setData(data)
-
 

@@ -1,6 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
 
+// -- Axis Messages --
 message AddAxisRequest {
     uint32 axis_id = 1;
     uint32 number_of_samples = 2;
@@ -14,6 +15,7 @@ message RemoveAxisRequest {
     uint32 axis_id = 1;
 }
 
+// -- Signal Messages --
 message AddSignalRequest {
   uint32 axis_id = 1; // axis to attach the signal to
   uint32 signal_id = 2;
@@ -25,6 +27,7 @@ message RemoveSignalRequest {
   uint32 signal_id = 1;
 }
 
+// -- Streaming Messages --
 message streamPoint {
   uint32 signal_id = 1;
   float value = 3;
@@ -34,6 +37,8 @@ message streamPointRequest {
   repeated streamPoint points = 1;
 }
 
+// 
+
 service PlotService {
   // Configure
   rpc AddAxis(AddAxisRequest) returns (google.protobuf.Empty);
@@ -41,6 +46,8 @@ service PlotService {
 
   rpc AddSignal(AddSignalRequest) returns (google.protobuf.Empty);
   rpc RemoveSignal(RemoveSignalRequest) returns (google.protobuf.Empty);
+
+  rpc clearAll(google.protobuf.Empty) returns (google.protobuf.Empty);
  
 
   // Stream
