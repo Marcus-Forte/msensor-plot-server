@@ -8,8 +8,14 @@ This application starts a Plot server, where clients can configure and stream da
 
 ## Start server
 
-`python src/app.py`
+`python -m src.app -p 50052`
 
 ## Generate proto definitions
 
-- `python -m grpc_tools.protoc -Iproto_gen=proto --python_out=src --pyi_out=src --grpc_python_out=src proto/plot.proto`
+- `python -m grpc_tools.protoc -Isrc/proto_gen=proto --python_out=. --pyi_out=. --grpc_python_out=. proto/plot.proto`
+
+## Config
+
+Configure plots as IMU:
+
+- `python -m config.config_imu -a localhost:50052`

@@ -4,7 +4,7 @@ import grpc
 import warnings
 
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
-from proto_gen import plot_pb2 as proto__gen_dot_plot__pb2
+from src.proto_gen import plot_pb2 as src_dot_proto__gen_dot_plot__pb2
 
 GRPC_GENERATED_VERSION = '1.71.0'
 GRPC_VERSION = grpc.__version__
@@ -19,7 +19,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in proto_gen/plot_pb2_grpc.py depends on'
+        + f' but the generated code in src/proto_gen/plot_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -37,27 +37,27 @@ class PlotServiceStub(object):
         """
         self.AddAxis = channel.unary_unary(
                 '/PlotService/AddAxis',
-                request_serializer=proto__gen_dot_plot__pb2.AddAxisRequest.SerializeToString,
+                request_serializer=src_dot_proto__gen_dot_plot__pb2.AddAxisRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.RemoveAxis = channel.unary_unary(
                 '/PlotService/RemoveAxis',
-                request_serializer=proto__gen_dot_plot__pb2.RemoveAxisRequest.SerializeToString,
+                request_serializer=src_dot_proto__gen_dot_plot__pb2.RemoveAxisRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.AddSignal = channel.unary_unary(
                 '/PlotService/AddSignal',
-                request_serializer=proto__gen_dot_plot__pb2.AddSignalRequest.SerializeToString,
+                request_serializer=src_dot_proto__gen_dot_plot__pb2.AddSignalRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.RemoveSignal = channel.unary_unary(
                 '/PlotService/RemoveSignal',
-                request_serializer=proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
+                request_serializer=src_dot_proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
         self.streamPlot = channel.stream_unary(
                 '/PlotService/streamPlot',
-                request_serializer=proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
+                request_serializer=src_dot_proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 _registered_method=True)
 
@@ -102,27 +102,27 @@ def add_PlotServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'AddAxis': grpc.unary_unary_rpc_method_handler(
                     servicer.AddAxis,
-                    request_deserializer=proto__gen_dot_plot__pb2.AddAxisRequest.FromString,
+                    request_deserializer=src_dot_proto__gen_dot_plot__pb2.AddAxisRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'RemoveAxis': grpc.unary_unary_rpc_method_handler(
                     servicer.RemoveAxis,
-                    request_deserializer=proto__gen_dot_plot__pb2.RemoveAxisRequest.FromString,
+                    request_deserializer=src_dot_proto__gen_dot_plot__pb2.RemoveAxisRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'AddSignal': grpc.unary_unary_rpc_method_handler(
                     servicer.AddSignal,
-                    request_deserializer=proto__gen_dot_plot__pb2.AddSignalRequest.FromString,
+                    request_deserializer=src_dot_proto__gen_dot_plot__pb2.AddSignalRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'RemoveSignal': grpc.unary_unary_rpc_method_handler(
                     servicer.RemoveSignal,
-                    request_deserializer=proto__gen_dot_plot__pb2.RemoveSignalRequest.FromString,
+                    request_deserializer=src_dot_proto__gen_dot_plot__pb2.RemoveSignalRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'streamPlot': grpc.stream_unary_rpc_method_handler(
                     servicer.streamPlot,
-                    request_deserializer=proto__gen_dot_plot__pb2.streamPointRequest.FromString,
+                    request_deserializer=src_dot_proto__gen_dot_plot__pb2.streamPointRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
@@ -151,7 +151,7 @@ class PlotService(object):
             request,
             target,
             '/PlotService/AddAxis',
-            proto__gen_dot_plot__pb2.AddAxisRequest.SerializeToString,
+            src_dot_proto__gen_dot_plot__pb2.AddAxisRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -178,7 +178,7 @@ class PlotService(object):
             request,
             target,
             '/PlotService/RemoveAxis',
-            proto__gen_dot_plot__pb2.RemoveAxisRequest.SerializeToString,
+            src_dot_proto__gen_dot_plot__pb2.RemoveAxisRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -205,7 +205,7 @@ class PlotService(object):
             request,
             target,
             '/PlotService/AddSignal',
-            proto__gen_dot_plot__pb2.AddSignalRequest.SerializeToString,
+            src_dot_proto__gen_dot_plot__pb2.AddSignalRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -232,7 +232,7 @@ class PlotService(object):
             request,
             target,
             '/PlotService/RemoveSignal',
-            proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
+            src_dot_proto__gen_dot_plot__pb2.RemoveSignalRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,
@@ -259,7 +259,7 @@ class PlotService(object):
             request_iterator,
             target,
             '/PlotService/streamPlot',
-            proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
+            src_dot_proto__gen_dot_plot__pb2.streamPointRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options,
             channel_credentials,

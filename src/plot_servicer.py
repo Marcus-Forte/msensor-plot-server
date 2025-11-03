@@ -3,7 +3,7 @@ from PyQt5 import QtCore
 import pyqtgraph as pg
 
 # Import the generated gRPC files
-from proto_gen import plot_pb2_grpc
+from src.proto_gen import plot_pb2_grpc
 from google.protobuf import empty_pb2
 
 # --- 1. The gRPC Servicer ---

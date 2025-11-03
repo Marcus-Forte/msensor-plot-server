@@ -8,11 +8,11 @@ from PyQt5 import QtWidgets
 import pyqtgraph as pg
 
 # Import the generated gRPC files
-from proto_gen import plot_pb2_grpc
+from src.proto_gen import plot_pb2_grpc
 
 # Import our new local classes
-from main_window import MainWindow
-from plot_servicer import PlotServicer
+from .main_window import MainWindow
+from .plot_servicer import PlotServicer
 
 # --- PyQtGraph Global Config ---
 pg.setConfigOption('background', 'k')
