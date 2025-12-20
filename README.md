@@ -12,26 +12,22 @@ It is very simple:
 
 Check out the [proto](./proto/plot.proto) definition file to use the API!
 
-## Setup Environment
-
-`source setup_env.sh`
-
 ## Start server
 
-`python -m src.app -p 50052`
+`uv run python -m src.app -p 50052`
 
 ## Configuration
 
 See example for configuring signals of an IMU sensor:
 
-- `python -m config.config_imu_signals -a localhost:50052`
+- `uv run python -m config.config_imu_signals -a localhost:50052`
 
 --- 
 # Development 
 
 ## Generate proto definitions
 
-- `python -m grpc_tools.protoc -Isrc/proto_gen=proto --python_out=. --pyi_out=. --grpc_python_out=. proto/plot.proto`
+- `uv run python -m grpc_tools.protoc -Isrc/proto_gen=proto --python_out=. --pyi_out=. --grpc_python_out=. proto/plot.proto`
 
 ## TODO
 

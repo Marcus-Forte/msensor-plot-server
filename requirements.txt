@@ -1,3 +1,0 @@
-PyQt5 == 5.15.11
-pyqtgraph == 0.13.7
-grpcio-tools==1.71.0 # This pulls grpcio already
